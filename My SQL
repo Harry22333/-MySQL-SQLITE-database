@@ -1,0 +1,35 @@
+java
+// Main class of the plugin
+public class CustomItemsPlugin extends JavaPlugin {
+
+    private static CustomItemsPlugin instance;
+    private MySQLDatabase database;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        
+        // Initialize MySQL database connection
+        database = new MySQLDatabase("localhost", "database_name", "username", "password");
+        database.connect();
+        
+        // Register events
+        getServer().getPluginManager().registerEvents(new ItemInteractListener(), this);
+        
+        // Register commands
+        getCommand("givecustomitem").setExecutor(new GiveCustomItemCommand());
+    }
+
+    @Override
+    public void onDisable() {
+        database.disconnect();
+    }
+
+    public static CustomItemsPlugin getInstance() {
+        return instance;
+    }
+
+    public MySQLDatabase getDatabase() {
+        return database;
+    }
+}
